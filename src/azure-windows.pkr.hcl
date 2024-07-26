@@ -57,9 +57,7 @@ source "azure-arm" "windows11" {
   image_publisher = "microsoftwindowsdesktop"
   image_sku       = "win11-23h2-ent"
 
-  vm_size                           = "Standard_B8as_v2"
-  managed_image_resource_group_name = "your-resource-group-name"
-  managed_image_name                = "windows11-ent-custom-image-v4"
+  vm_size = "Standard_B8as_v2"
 
   location      = "East US"
   public_ip_sku = "Standard"
@@ -69,6 +67,10 @@ source "azure-arm" "windows11" {
   winrm_insecure = true
   winrm_timeout  = "15m"
   winrm_username = "packer"
+
+  // Managed Image information
+  managed_image_resource_group_name = "your-resource-group-name"
+  managed_image_name                = "windows11-ent-custom-image-v4"
 }
 
 // Sources
