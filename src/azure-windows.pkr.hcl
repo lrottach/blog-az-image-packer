@@ -11,22 +11,22 @@
 
 variable "client_id" {
   type    = string
-  default = "${env("PKR_VAR_client_id")}"
+  default = "${env("ENV_PACKER_APP_ID")}"
 }
 
 variable "client_secret" {
   type    = string
-  default = "${env("PKR_VAR_client_secret")}"
+  default = "${env("ENV_PACKER_APP_SECRET")}"
 }
 
 variable "subscription_id" {
   type    = string
-  default = "${env("PKR_VAR_subscription_id")}"
+  default = "${env("ENV_PACKER_SUBSCRIPTION_ID")}"
 }
 
 variable "tenant_id" {
   type    = string
-  default = "${env("PKR_VAR_tenant_id")}"
+  default = "${env("ENV_PACKER_TENANT_ID")}"
 }
 
 // Plugins
