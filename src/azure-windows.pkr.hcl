@@ -1,3 +1,4 @@
+// Plugins
 packer {
   required_plugins {
     azure = {
@@ -8,6 +9,7 @@ packer {
 }
 
 
+// Sources
 source "azure-arm" "windows11" {
   client_id       = "${var.client_id}"
   client_secret   = "${var.client_secret}"
@@ -17,26 +19,28 @@ source "azure-arm" "windows11" {
   os_type         = "Windows"
   image_offer     = "windows-11"
   image_publisher = "microsoftwindowsdesktop"
-  image_sku       = "win11-22h2-pro"
+  image_sku       = "win11-23h2-ent"
 
-  vm_size                           = "Standard_B4as_v2"
+  vm_size                           = "Standard_B8as_v2"
   managed_image_resource_group_name = "your-resource-group-name"
-  managed_image_name                = "windows11-custom-image-v5"
+  managed_image_name                = "windows11-ent-custom-image-v2"
 
-  location = "East US"
+  location      = "East US"
+  public_ip_sku = "Standard"
 
   communicator   = "winrm"
   winrm_use_ssl  = true
   winrm_insecure = true
-  winrm_timeout  = "5m"
+  winrm_timeout  = "15m"
   winrm_username = "packer"
 }
 
+// Build
 build {
   sources = ["source.azure-arm.windows11"]
 
   provisioner "powershell" {
-    script = "./scripts/install-pwsh.ps1"
+    script = "./scripts/install-winget.ps1"
   }
 
   provisioner "windows-restart" {
@@ -44,36 +48,35 @@ build {
   }
 
   provisioner "powershell" {
-    use_pwsh = true
-    inline   = ["winget source update"]
+    inline = [
+      # Add winget CDN source
+      # Source: https://github.com/microsoft/winget-cli/issues/3068
+      "Add-AppPackage -path 'https://cdn.winget.microsoft.com/cache/source.msix'"
+    ]
   }
 
-  //   provisioner "powershell" {
-  //     inline = [
-  //         "(Get-AppxPackage Microsoft.DesktopAppInstaller).Version",
+  provisioner "powershell" {
+    inline = [
+      # Update the winget source
+      "winget source update --disable-interactivity",
 
-  //       # Update winget source
-  //       "winget source update",
+      # Install Visual Studio Code
+      "winget install --exact --id Microsoft.VisualStudioCode --silent --accept-source-agreements --accept-package-agreements --disable-interactivity",
 
-  //       # Install Visual Studio Code
-  //       "winget install -e --id Microsoft.VisualStudioCode --accept-source-agreements --accept-package-agreements",
+      # Install PowerShell 7
+      "winget install --exact --id Microsoft.PowerShell --silent --accept-source-agreements --accept-package-agreements",
 
-  //       # Install PowerShell 7
-  //       "winget install -e --id Microsoft.PowerShell --accept-source-agreements --accept-package-agreements",
+      # Install Visual Studio (Community edition)
+      "winget install --exact --id Microsoft.VisualStudio.2022.Community --silent --accept-source-agreements --accept-package-agreements"
+    ]
+  }
 
-  //       # Install Visual Studio (Community edition)
-  //       "winget install -e --id Microsoft.VisualStudio.2022.Community --accept-source-agreements --accept-package-agreements",
-
-  //       # Optional: Wait for installations to complete
-  //       "Start-Sleep -Seconds 30",
-
-  //       # Optional: Verify installations
-  //       "Write-Host 'Installed Software:'",
-  //       "winget list"
-  //     ]
-  //   }
+  provisioner "powershell" {
+    script = "./scripts/deprovisioning.ps1"
+  }
 }
 
+// Variables
 variable "client_id" {
   type    = string
   default = "${env("PKR_VAR_client_id")}"
