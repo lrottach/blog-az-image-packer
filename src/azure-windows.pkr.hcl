@@ -6,7 +6,6 @@
 //
 // ***********************************************************************
 
-
 // Variables
 // **********************
 
@@ -42,7 +41,6 @@ packer {
   }
 }
 
-
 // Sources
 // **********************
 
@@ -73,7 +71,7 @@ source "azure-arm" "windows11" {
   managed_image_name                = "windows11-ent-custom-image-v4"
 }
 
-// Sources
+// Build
 // **********************
 
 build {
