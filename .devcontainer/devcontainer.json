@@ -9,6 +9,16 @@
 		"ghcr.io/devcontainers/features/powershell:1": {},
 		"ghcr.io/devcontainers-contrib/features/packer-asdf:2": {},
 		"ghcr.io/devcontainers-contrib/features/terraform-asdf:2": {}
+	},
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"ms-azuretools.vscode-azureterraform",
+				"hashicorp.hcl",
+				"hashicorp.terraform",
+				"ms-vscode.powershell"
+			]
+		}
 	}
 
 	// Features to add to the dev container. More info: https://containers.dev/features.
