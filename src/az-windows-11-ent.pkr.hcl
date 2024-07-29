@@ -44,7 +44,7 @@ packer {
 // Sources
 // **********************
 
-source "azure-arm" "windows-11-ent" {
+source "azure-arm" "win-11-ent" {
 
   // Authentication
   client_id       = "${var.client_id}"
@@ -74,14 +74,14 @@ source "azure-arm" "windows-11-ent" {
 
   // Managed Image information
   managed_image_resource_group_name = "your-resource-group-name"
-  managed_image_name                = "windows11-ent-packer-image-v4-eus"
+  managed_image_name                = "windows11-ent-packer-image-v1-eus"
 }
 
 // Build
 // **********************
 
 build {
-  sources = ["source.azure-arm.windows11"]
+  sources = ["source.azure-arm.win-11-ent"]
 
   provisioner "powershell" {
     inline = [
