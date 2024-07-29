@@ -44,22 +44,28 @@ packer {
 // Sources
 // **********************
 
-source "azure-arm" "windows11" {
+source "azure-arm" "windows-11-ent" {
+
+  // Authentication
   client_id       = "${var.client_id}"
   client_secret   = "${var.client_secret}"
   subscription_id = "${var.subscription_id}"
   tenant_id       = "${var.tenant_id}"
 
+  // Source image information
   os_type         = "Windows"
   image_offer     = "windows-11"
   image_publisher = "microsoftwindowsdesktop"
   image_sku       = "win11-23h2-ent"
 
+  // Build VM size
   vm_size = "Standard_B8as_v2"
 
+  // Location and public IP
   location      = "East US"
   public_ip_sku = "Standard"
 
+  // Communicator (winrm) configuration
   communicator   = "winrm"
   winrm_use_ssl  = true
   winrm_insecure = true
@@ -68,7 +74,7 @@ source "azure-arm" "windows11" {
 
   // Managed Image information
   managed_image_resource_group_name = "your-resource-group-name"
-  managed_image_name                = "windows11-ent-custom-image-v4"
+  managed_image_name                = "windows11-ent-packer-image-v4-eus"
 }
 
 // Build
