@@ -73,7 +73,7 @@ source "azure-arm" "win-11-ent" {
   winrm_username = "packer"
 
   // Managed Image information
-  managed_image_resource_group_name = "your-resource-group-name"
+  managed_image_resource_group_name = "rg-p1-corp-packer-eus"
   managed_image_name                = "windows11-ent-packer-image-v1-eus"
 }
 
