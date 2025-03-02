@@ -16,7 +16,10 @@
 				"ms-azuretools.vscode-azureterraform",
 				"hashicorp.hcl",
 				"hashicorp.terraform",
-				"ms-vscode.powershell"
+				"ms-vscode.powershell",
+				"GitHub.copilot-chat",
+				"github.vscode-github-actions",
+				"eamodio.gitlens"
 			]
 		}
 	}
