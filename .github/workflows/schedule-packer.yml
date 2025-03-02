@@ -21,6 +21,7 @@ jobs:
       run:
         working-directory: ./src
     name: Terraform Plan
+    environment: dev
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
