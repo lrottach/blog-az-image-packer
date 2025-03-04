@@ -20,9 +20,3 @@ image_offer = "windows-11"
 
 # Compute gallery image definition SKU
 image_sku = "dev-windows-11-ent"
-
-# Compute gallery image version description
-image_version_description = "Initial version of the image"
-
-# VM size for the image
-vm_size = "Standard_B4as_v2"

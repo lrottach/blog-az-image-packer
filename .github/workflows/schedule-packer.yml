@@ -46,3 +46,8 @@ jobs:
         id: plan
         working-directory: ./src
         run: terraform plan -out=tfplan -var-file="./dev.tfvars"
+
+      - name: Terraform Plan
+        id: apply
+        working-directory: ./src
+        run: terraform apply -auto-approve tfplan
