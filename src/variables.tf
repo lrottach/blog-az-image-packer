@@ -19,19 +19,19 @@ variable "image_definition_name" {
   type        = string
 }
 
-variable "publisher" {
+variable "image_publisher" {
   description = "The publisher of the image."
   type        = string
   default     = "Canonical"
 }
 
-variable "offer" {
+variable "image_offer" {
   description = "The offer of the image."
   type        = string
   default     = "UbuntuServer"
 }
 
-variable "sku" {
+variable "image_sku" {
   description = "The SKU of the image."
   type        = string
   default     = "18.04-LTS"
