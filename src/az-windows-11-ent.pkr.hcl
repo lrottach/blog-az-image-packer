@@ -29,6 +29,31 @@ variable "tenant_id" {
   default = "${env("ENV_PACKER_TENANT_ID")}"
 }
 
+variable "image_gallery_name" {
+  type    = string
+  default = "acgdcod1img"
+}
+
+variable "image_gallery_resource_group" {
+  type    = string
+  default = "rg-dco-d1-img-gallery"
+}
+
+variable "image_definition_name" {
+  type    = string
+  default = "az-dev-w11-ent"
+}
+
+variable "image_version" {
+  type    = string
+  default = "1.0.0"
+}
+
+variable "target_region" {
+  type    = list(string)
+  default = ["East US"]
+}
+
 // Plugins
 // **********************
 
@@ -72,10 +97,23 @@ source "azure-arm" "win-11-ent" {
   winrm_timeout  = "15m"
   winrm_username = "packer"
 
-  // Managed Image information
-  managed_image_resource_group_name = "rg-p1-corp-packer-eus"
-  managed_image_name                = "windows11-ent-packer-image-v1-eus"
+  // Shared Image Gallery configuration
+  shared_image_gallery_destination {
+    subscription         = "${var.subscription_id}"
+    gallery_name         = "${var.image_gallery_name}"
+    resource_group       = "${var.image_gallery_resource_group}"
+    image_name           = "${var.image_definition_name}"
+    image_version        = "${var.image_version}"
+    storage_account_type = "Standard_LRS"
+    target_region {
+      name = "eastus"
+    }
+  }
+  #   // Managed Image information
+  #   managed_image_resource_group_name = "rg-p1-corp-packer-eus"
+  #   managed_image_name                = "windows11-ent-packer-image-v1-eus"
 }
+
 
 // Build
 // **********************
