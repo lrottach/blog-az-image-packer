@@ -41,3 +41,8 @@ jobs:
       - name: Terraform Validate
         id: validate
         run: terraform validate -no-color
+
+      - name: Terraform Plan
+        id: plan
+        working-directory: ./src
+        run: terraform plan -out=tfplan -var-file=dev.tfvars
