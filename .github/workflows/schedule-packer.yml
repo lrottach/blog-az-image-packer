@@ -42,12 +42,6 @@ jobs:
         id: validate
         run: terraform validate -no-color
 
-      - name: Troublesh
-        working-directory: ./src
-        run: |
-            pwd
-            ls -la
-
       - name: Terraform Plan
         id: plan
         working-directory: ./src
