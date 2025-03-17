@@ -97,7 +97,7 @@ jobs:
         run: |
           IMAGE_DEF_ID="${{ needs.terraform-deploy.outputs.image_definition_id }}"
           RESOURCE_GROUP="${{ needs.terraform-deploy.outputs.resource_group_name }}"
-          GALLERY_NAME= "${{ needs.terraform-deploy.outputs.gallery_name }}"
+          GALLERY_NAME="${{ needs.terraform-deploy.outputs.gallery_name }}"
           IMAGE_DEF_NAME="${{ needs.terraform-deploy.outputs.image_definition_name }}"
 
           echo "Resource Group: $RESOURCE_GROUP"
