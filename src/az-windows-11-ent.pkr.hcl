@@ -67,6 +67,7 @@ packer {
 source "azure-arm" "win-11-ent" {
 
   // Authentication
+  use_azure_cli_auth = true
 #   use_oidc_credentials = true
 #   client_id            = "${var.client_id}"
 #   client_jwt           = "${var.arm_oidc_token}"
