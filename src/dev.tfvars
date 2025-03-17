@@ -13,7 +13,7 @@ gallery_name = "acgdcod1img"
 image_definition_name = "az-dev-w11-ent"
 
 # Compute gallery image definition publisher
-image_publisher = "Dark Contoso Labs"
+image_publisher = "darkcontoso-labs"
 
 # Compute gallery image definition offer
 image_offer = "windows-11"
