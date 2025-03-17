@@ -70,7 +70,6 @@ jobs:
             echo "ARM_USE_OIDC=true" >> $GITHUB_ENV
             echo "ARM_CLIENT_ID=${{ vars.AZURE_CLIENT_ID }}" >> $GITHUB_ENV
             echo "ARM_TENANT_ID=${{ vars.AZURE_TENANT_ID }}" >> $GITHUB_ENV
-            echo "ARM_SUBSCRIPTION_ID=${{ vars.AZURE_SUBSCRIPTION_ID }}" >> $GITHUB_ENV
 
       - name: Initialize Packer
         working-directory: ./src
