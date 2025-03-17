@@ -37,5 +37,5 @@ variable "image_sku" {
 variable "os_type" {
   description = "The OS type of the image (Linux or Windows)."
   type        = string
-  default = "Windows"
+  default     = "Windows"
 }
