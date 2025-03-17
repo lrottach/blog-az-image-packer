@@ -22,23 +22,20 @@ variable "image_definition_name" {
 variable "image_publisher" {
   description = "The publisher of the image."
   type        = string
-  default     = "Canonical"
 }
 
 variable "image_offer" {
   description = "The offer of the image."
   type        = string
-  default     = "UbuntuServer"
 }
 
 variable "image_sku" {
   description = "The SKU of the image."
   type        = string
-  default     = "18.04-LTS"
 }
 
 variable "os_type" {
   description = "The OS type of the image (Linux or Windows)."
   type        = string
-  default     = "Linux"
+  default = "Windows"
 }
