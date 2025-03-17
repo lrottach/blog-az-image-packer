@@ -14,10 +14,10 @@
 #   default = "${env("ENV_PACKER_APP_ID")}"
 # }
 
-# variable "subscription_id" {
-#   type    = string
-#   default = "${env("ENV_PACKER_SUBSCRIPTION_ID")}"
-# }
+variable "subscription_id" {
+  type    = string
+  default = "${env("ARM_SUBSCRIPTION_ID")}"
+}
 
 # variable "arm_oidc_token" {
 #   type    = string
