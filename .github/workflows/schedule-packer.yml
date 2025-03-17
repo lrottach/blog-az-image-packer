@@ -14,6 +14,7 @@ env:
   ARM_USE_AZUREAD: true
   ARM_USE_OIDC: true
   PACKER_VERSION: "latest"
+  TERRAFORM_VERSION: "latest"
   WORKING_DIR: ./src
 jobs:
   terraform-deploy:
@@ -41,6 +42,9 @@ jobs:
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_wrapper: false
+          terraform_version: ${{ env.TERRAFORM_VERSION }}
 
       - name: Terraform Init
         run: |
