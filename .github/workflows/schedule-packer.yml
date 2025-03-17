@@ -1,15 +1,12 @@
 name: Schedule Packer automatic image build
-
 on:
   push:
     branches:
       - main
-
 permissions:
   contents: read
   id-token: write
   pull-requests: write
-
 env:
   ARM_CLIENT_ID: ${{ vars.AZURE_CLIENT_ID }}
   ARM_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
@@ -18,7 +15,6 @@ env:
   ARM_USE_OIDC: true
   PACKER_VERSION: "latest"
   WORKING_DIR: ./src
-
 jobs:
   terraform-deploy:
     name: Deploy Infrastructure
@@ -27,11 +23,15 @@ jobs:
     defaults:
       run:
         working-directory: ${{ env.WORKING_DIR }}
+    outputs:
+      resource_group_name: ${{ steps.terraform_outputs.outputs.resource_group_name }}
+      gallery_name: ${{ steps.terraform_outputs.outputs.gallery_name }}
+      image_definition_id: ${{ steps.terraform_outputs.outputs.image_definition_id }}
+      image_definition_name: ${{ steps.terraform_outputs.outputs.image_definition_name }}
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
       - name: Azure Login with OIDC
         uses: azure/login@v2
         with:
@@ -60,6 +60,14 @@ jobs:
       - name: Terraform Apply
         run: terraform apply -auto-approve tfplan
 
+      - name: Extract Terraform Outputs
+        id: terraform_outputs
+        run: |
+          echo "resource_group_name=$(terraform output -raw resource_group_name)" >> $GITHUB_OUTPUT
+          echo "gallery_name=$(terraform output -raw gallery_name)" >> $GITHUB_OUTPUT
+          echo "image_definition_id=$(terraform output -raw image_definition_id)" >> $GITHUB_OUTPUT
+          echo "image_definition_id=$(terraform output -raw image_definition_name)" >> $GITHUB_OUTPUT
+
   packer-build:
     name: Build VM Image
     environment: dev
@@ -68,8 +76,8 @@ jobs:
     defaults:
       run:
         working-directory: ${{ env.WORKING_DIR }}
-
     steps:
+
       - name: Checkout code
         uses: actions/checkout@v4
 
@@ -79,6 +87,44 @@ jobs:
           client-id: ${{ env.ARM_CLIENT_ID }}
           tenant-id: ${{ env.ARM_TENANT_ID }}
           subscription-id: ${{ env.ARM_SUBSCRIPTION_ID }}
+
+      - name: Get Latest Image Version
+        id: get_version
+        run: |
+          IMAGE_DEF_ID="${{ needs.terraform-deploy.outputs.image_definition_id }}"
+          RESOURCE_GROUP="${{ needs.terraform-deploy.outputs.resource_group_name }}"
+          GALLERY_NAME= "${{ needs.terraform-deploy.outputs.gallery_name }}"
+          IMAGE_DEF_NAME="${{ needs.terraform-deploy.outputs.image_definition_name }}"
+
+          echo "Resource Group: $RESOURCE_GROUP"
+          echo "Gallery Name: $GALLERY_NAME"
+          echo "Image Definition: $IMAGE_DEF_NAME"
+
+          # Query latest version
+          LATEST_VERSION=$(az sig image-version list \
+            --resource-group $RESOURCE_GROUP \
+            --gallery-name $GALLERY_NAME \
+            --gallery-image-definition $IMAGE_DEF_NAME \
+            --query "max_by([], &name).name" -o tsv)
+
+          # If no version exists, set default
+          if [ -z "$LATEST_VERSION" ] || [ "$LATEST_VERSION" == "null" ]; then
+            LATEST_VERSION="1.0.0"
+            echo "No existing versions found, starting with $LATEST_VERSION"
+          else
+            echo "Latest version found: $LATEST_VERSION"
+          fi
+
+          # Increment version
+          IFS='.' read -ra VERSION_PARTS <<< "$LATEST_VERSION"
+          MAJOR=${VERSION_PARTS[0]}
+          MINOR=${VERSION_PARTS[1]}
+          PATCH=$((${VERSION_PARTS[2]} + 1))
+          NEW_VERSION="$MAJOR.$MINOR.$PATCH"
+
+          echo "New version: $NEW_VERSION"
+          echo "NEW_IMAGE_VERSION=$NEW_VERSION" >> $GITHUB_ENV
+          echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
 
       - name: Setup Packer
         uses: hashicorp/setup-packer@main
@@ -92,4 +138,6 @@ jobs:
         run: packer validate ./az-windows-11-ent.pkr.hcl
 
       - name: Packer Build
-        run: packer build ./az-windows-11-ent.pkr.hcl
+        run: |
+          echo "Building new image version: $NEW_IMAGE_VERSION"
+          packer build -var "image_version=$NEW_IMAGE_VERSION" ./az-windows-11-ent.pkr.hcl
