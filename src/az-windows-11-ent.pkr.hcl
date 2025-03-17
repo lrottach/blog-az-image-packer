@@ -9,25 +9,25 @@
 // Variables
 // **********************
 
-variable "client_id" {
-  type    = string
-  default = "${env("ENV_PACKER_APP_ID")}"
-}
+# variable "client_id" {
+#   type    = string
+#   default = "${env("ENV_PACKER_APP_ID")}"
+# }
 
-variable "subscription_id" {
-  type    = string
-  default = "${env("ENV_PACKER_SUBSCRIPTION_ID")}"
-}
+# variable "subscription_id" {
+#   type    = string
+#   default = "${env("ENV_PACKER_SUBSCRIPTION_ID")}"
+# }
 
-variable "arm_oidc_token" {
-  type    = string
-  default = "${env("ARM_OIDC_TOKEN")}"
-}
+# variable "arm_oidc_token" {
+#   type    = string
+#   default = "${env("ARM_OIDC_TOKEN")}"
+# }
 
-variable "tenant_id" {
-  type    = string
-  default = "${env("ENV_PACKER_TENANT_ID")}"
-}
+# variable "tenant_id" {
+#   type    = string
+#   default = "${env("ENV_PACKER_TENANT_ID")}"
+# }
 
 variable "image_gallery_name" {
   type    = string
@@ -67,9 +67,10 @@ packer {
 source "azure-arm" "win-11-ent" {
 
   // Authentication
-  client_id       = "${var.client_id}"
-  client_jwt      = "${var.arm_oidc_token}"
-  subscription_id = "${var.subscription_id}"
+#   use_oidc_credentials = true
+#   client_id            = "${var.client_id}"
+#   client_jwt           = "${var.arm_oidc_token}"
+#   subscription_id      = "${var.subscription_id}"
   #   tenant_id       = "${var.tenant_id}"
 
   // Source image information
