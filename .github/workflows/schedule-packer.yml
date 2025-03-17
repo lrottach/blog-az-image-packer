@@ -66,7 +66,7 @@ jobs:
           echo "resource_group_name=$(terraform output -raw resource_group_name)" >> $GITHUB_OUTPUT
           echo "gallery_name=$(terraform output -raw gallery_name)" >> $GITHUB_OUTPUT
           echo "image_definition_id=$(terraform output -raw image_definition_id)" >> $GITHUB_OUTPUT
-          echo "image_definition_id=$(terraform output -raw image_definition_name)" >> $GITHUB_OUTPUT
+          echo "image_definition_name=$(terraform output -raw image_definition_name)" >> $GITHUB_OUTPUT
 
   packer-build:
     name: Build VM Image
